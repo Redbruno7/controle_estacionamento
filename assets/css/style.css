@@ -1,46 +1,142 @@
+/* ===== Reset ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* ===== Corpo ===== */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f5f5;
+    background: #f4f6f9;
+    color: #333;
     padding: 20px;
 }
 
-h1 {
+/* ===== Títulos ===== */
+h1, h2 {
     color: #0a3a70;
+    margin-bottom: 15px;
+}
+
+/* ===== Navbar ===== */
+nav {
+    background: #0a3a70;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
 }
 
 nav a {
-    margin: 0 10px;
-    color: #0a3a70;
+    color: #fff;
+    font-weight: bold;
     text-decoration: none;
+    transition: 0.3s;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    color: #ffd700;
 }
 
+/* ===== Formulários ===== */
 form {
-    max-width: 300px;
-    margin: 20px 0;
+    background: #fff;
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
 }
 
 form label {
-    display: block;
+    font-weight: bold;
     margin-top: 10px;
+    display: block;
 }
 
-form input, form button {
+form input, 
+form select, 
+form button {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
 }
 
+/* Botões */
+form button, .btn {
+    background: #0a3a70;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+form button:hover, .btn:hover {
+    background: #084080;
+}
+
+/* ===== Tabelas ===== */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 25px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+table th {
+    background: #0a3a70;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Listras alternadas */
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Links de ação */
+table a {
+    color: #0a3a70;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+table a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Container principal ===== */
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* ===== Tela de Login ===== */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* ocupa a tela toda */
+}
+
+.login-page .container {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
 }

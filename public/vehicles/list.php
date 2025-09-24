@@ -6,7 +6,23 @@ if (!isset($_SESSION["logado"])) {
     exit();
 }
 
-$result = $conn->query("SELECT * FROM vehicles ORDER BY vehicle_id ASC");
+// Captura o termo de busca, se houver
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+if ($search) {
+    // Prepared statement para buscar por dono, placa ou modelo
+    $stmt = $conn->prepare("SELECT * FROM vehicles 
+                            WHERE owner_name LIKE ? 
+                               OR plate LIKE ? 
+                               OR model LIKE ? 
+                            ORDER BY vehicle_id ASC");
+    $like = "%$search%";
+    $stmt->bind_param("sss", $like, $like, $like);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $result = $conn->query("SELECT * FROM vehicles ORDER BY vehicle_id ASC");
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,10 +44,18 @@ $result = $conn->query("SELECT * FROM vehicles ORDER BY vehicle_id ASC");
             <a href="../logout.php">Sair</a>
         </nav>
 
+        <!-- Formulário de busca -->
+        <form method="get" class="search-form">
+            <input type="text" name="search" placeholder="Buscar veículo..." value="<?= htmlspecialchars($search) ?>">
+            <button type="submit">Buscar</button>
+            <?php if($search): ?>
+                <a href="list.php" class="clear-btn">Limpar</a>
+            <?php endif; ?>
+        </form>
+
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Dono</th>
                     <th>Placa</th>
                     <th>Modelo</th>
@@ -42,7 +66,6 @@ $result = $conn->query("SELECT * FROM vehicles ORDER BY vehicle_id ASC");
             <tbody>
                 <?php while($row = $result->fetch_assoc()) { ?>
                 <tr>
-                    <td><?= $row["vehicle_id"] ?></td>
                     <td><?= $row["owner_name"] ?></td>
                     <td><?= $row["plate"] ?></td>
                     <td><?= $row["model"] ?></td>

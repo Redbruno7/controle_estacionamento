@@ -13,7 +13,6 @@ if (!$id) {
     exit();
 }
 
-// Buscar entrada
 $stmt = $conn->prepare("SELECT * FROM parking_entries WHERE entry_id=?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -24,19 +23,38 @@ if (!$entry) {
     exit();
 }
 
-// Atualizar
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $entry_time = $_POST["entry_time"];
     $exit_time  = $_POST["exit_time"] ?: null;
-    $price      = $_POST["price"];
+    $price      = 0;
+
+    // Validação - saída não pode ser antes da entrada
+    if ($exit_time && $exit_time < $entry_time) {
+        echo "<script>alert('⚠ A saída não pode ser anterior à entrada!'); window.history.back();</script>";
+        exit();
+    }
+
+    // Se houver saída - calcular preço automaticamente
+    if ($exit_time) {
+        $entry_timestamp = strtotime($entry_time);
+        $exit_timestamp  = strtotime($exit_time);
+
+        $diff_seconds = $exit_timestamp - $entry_timestamp;
+        $diff_minutes = ceil($diff_seconds / 60); // arredonda para cima
+
+        // Cada 15 minutos = R$3,50
+        $blocks = ceil($diff_minutes / 15);
+        $price  = $blocks * 3.50;
+    }
 
     $stmt = $conn->prepare("UPDATE parking_entries SET entry_time=?, exit_time=?, price=? WHERE entry_id=?");
     $stmt->bind_param("ssdi", $entry_time, $exit_time, $price, $id);
     $stmt->execute();
 
-    header("Location: list.php");
+    echo "<script>alert('✅ Registro atualizado com sucesso!'); window.location.href='list.php';</script>";
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -64,8 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="exit_time">Saída:</label>
             <input type="datetime-local" id="exit_time" name="exit_time" value="<?= $entry['exit_time'] ? str_replace(' ', 'T', $entry['exit_time']) : '' ?>">
 
-            <label for="price">Preço:</label>
-            <input type="number" step="0.01" id="price" name="price" value="<?= $entry['price'] ?>">
+            <label for="price">Preço (calculado automaticamente):</label>
+            <input type="text" id="price" value="<?= $entry['price'] > 0 ? "R$ " . number_format($entry['price'],2,",",".") : "-" ?>" disabled>
 
             <button type="submit">Salvar</button>
         </form>

@@ -140,3 +140,13 @@ table a:hover {
     max-width: 400px;
     text-align: center;
 }
+
+/* Centralizar o formulário de busca dentro da página */
+.search-form {
+    display: flex;
+    justify-content: center; /* centraliza os itens dentro do form */
+    align-items: center;
+    margin: 20px auto; /* centraliza o próprio form horizontalmente */
+    gap: 10px;
+    max-width: 400px; /* opcional: controla largura do form */
+}

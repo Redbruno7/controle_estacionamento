@@ -1,5 +1,6 @@
 <?php
 require_once "../../src/config.php";
+date_default_timezone_set('America/Sao_Paulo');
 
 if (!isset($_SESSION["logado"])) {
     header("Location: ../login.php");

@@ -73,10 +73,10 @@ if ($vehicle_id) {
                         <td>
                             <?php if (!$row["exit_time"]) { ?>
                                 <a href="edit.php?id=<?= $row['entry_id'] ?>">Registrar Saída</a>
-                            <?php } else { ?>
-                                <a href="edit.php?id=<?= $row['entry_id'] ?>">Editar</a>
                             <?php } ?>
-                            <a href="delete.php?id=<?= $row['entry_id'] ?>">Excluir</a>
+                            <a href="delete.php?id=<?= $row['entry_id'] ?>" class="table-link-danger">
+                                Excluir
+                            </a>
                         </td>
                     </tr>
                 <?php } ?>

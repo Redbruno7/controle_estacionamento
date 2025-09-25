@@ -71,9 +71,11 @@ if ($search) {
                     <td><?= $row["model"] ?></td>
                     <td><?= $row["color"] ?></td>
                     <td>
-                        <a href="edit.php?id=<?= $row['vehicle_id'] ?>">Editar</a>
-                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" onclick="return confirm('Excluir veículo?')">Excluir</a>
                         <a href="../entries/list.php?vehicle_id=<?= $row['vehicle_id'] ?>">Entradas</a>
+                        <a href="edit.php?id=<?= $row['vehicle_id'] ?>">Editar</a>
+                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" class="table-link-danger">
+                            Excluir
+                        </a>
                     </td>
                 </tr>
                 <?php } ?>

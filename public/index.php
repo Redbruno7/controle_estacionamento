@@ -23,7 +23,7 @@ if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
         <h2>Bem-vindo ao Sistema</h2>
         <nav>
             <a href="vehicles/list.php"><i class="bi bi-car-front"></i> Veículos</a>
-            <a href="entries/list.php"><i class="bi bi-door-open"></i> Entradas</a>
+            <a href="entries/list.php"><i class="bi bi-journal-check"></i> Entradas</a>
             <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
         </nav>
     </header>

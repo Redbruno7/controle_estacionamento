@@ -1,16 +1,16 @@
 <?php
-require_once "../../src/config.php";
+require_once __DIR__ . "/../../src/config.php";
 
-if (!isset($_SESSION["logado"])) {
-    header("Location: ../login.php");
+if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
+    header("Location: login.php");
     exit();
 }
 
-// Captura o termo de busca, se houver
+// Captura o termo de busca
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 if ($search) {
-    // Prepared statement para buscar por dono, placa ou modelo
+    // Busca por dono, placa ou modelo
     $stmt = $conn->prepare("SELECT * FROM vehicles 
                             WHERE owner_name LIKE ? 
                                OR plate LIKE ? 
@@ -31,6 +31,9 @@ if ($search) {
     <meta charset="UTF-8">
     <title>Veículos</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -38,10 +41,10 @@ if ($search) {
         <h2>Lista de Veículos</h2>
 
         <nav>
-            <a href="../index.php">Início</a>
-            <a href="add.php">Adicionar Veículo</a>
-            <a href="../entries/list.php">Gerenciar Entradas</a>
-            <a href="../logout.php">Sair</a>
+            <a href="../index.php"><i class="bi bi-house"></i> Início</a>
+            <a href="add.php"><i class="bi bi-plus-circle"></i> Adicionar Veículo</a>
+            <a href="../entries/list.php"><i class="bi bi-journal-check"></i> Entradas</a>
+            <a href="../logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
         </nav>
 
         <!-- Formulário de busca -->
@@ -53,6 +56,7 @@ if ($search) {
             <?php endif; ?>
         </form>
 
+        <!-- Tabela -->
         <table>
             <thead>
                 <tr>
@@ -63,6 +67,7 @@ if ($search) {
                     <th>Ações</th>
                 </tr>
             </thead>
+            
             <tbody>
                 <?php while($row = $result->fetch_assoc()) { ?>
                 <tr>
@@ -70,17 +75,30 @@ if ($search) {
                     <td><?= $row["plate"] ?></td>
                     <td><?= $row["model"] ?></td>
                     <td><?= $row["color"] ?></td>
+                    
                     <td>
-                        <a href="../entries/list.php?vehicle_id=<?= $row['vehicle_id'] ?>">Entradas</a>
-                        <a href="edit.php?id=<?= $row['vehicle_id'] ?>">Editar</a>
-                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" class="table-link-danger">
-                            Excluir
+                        <a href="../entries/list.php?vehicle_id=<?= $row['vehicle_id'] ?>" title="Entradas">
+                            <i class="bi bi-box-arrow-in-right"></i> Entradas
+                        </a>
+                        <a href="edit.php?id=<?= $row['vehicle_id'] ?>" title="Editar">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" class="table-link-danger" title="Excluir">
+                            <i class="bi bi-trash"></i> Excluir
                         </a>
                     </td>
                 </tr>
                 <?php } ?>
+
+                <?php if($result->num_rows === 0): ?>
+                    <tr>
+                        <td colspan="5" style="text-align:center;">Nenhum veículo encontrado</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
-    </div>
+
+        <?php include "../footer.php"; ?>
+    </main>
 </body>
 </html>

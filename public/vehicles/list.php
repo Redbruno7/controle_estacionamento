@@ -83,7 +83,7 @@ if ($search) {
                         <a href="edit.php?id=<?= $row['vehicle_id'] ?>" title="Editar">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
-                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" class="table-link-danger" title="Excluir">
+                        <a href="delete.php?id=<?= $row['vehicle_id'] ?>" class="table-link-danger btn-delete" data-owner="<?= htmlspecialchars($row['owner_name'], ENT_QUOTES) ?>">
                             <i class="bi bi-trash"></i> Excluir
                         </a>
                     </td>
@@ -100,5 +100,7 @@ if ($search) {
 
         <?php include "../footer.php"; ?>
     </main>
+
+    <script src="../../assets/js/script.js"></script>
 </body>
 </html>

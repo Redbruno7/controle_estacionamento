@@ -1,33 +1,34 @@
 <?php
-require_once "../../src/config.php";
+require_once __DIR__ . "/../../src/config.php";
 
-if (!isset($_SESSION["logado"])) {
-    header("Location: ../login.php");
+if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
+    header("Location: login.php");
     exit();
 }
 
-$id = $_GET["id"] ?? null;
+$id = isset($_GET["id"]) ? (int)$_GET["id"] : null;
 
 if (!$id) {
-    echo "<script>alert('Nenhum ID informado.'); window.location.href='list.php';</script>";
+    header("Location: list.php");
     exit();
 }
 
-// Confirmar exclusão
-if (isset($_GET["confirm"]) && $_GET["confirm"] === "yes") {
-    $stmt = $conn->prepare("DELETE FROM vehicles WHERE vehicle_id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+// Verifica se o veículo existe
+$stmt = $conn->prepare("SELECT vehicle_id FROM vehicles WHERE vehicle_id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    echo "<script>alert('Veículo excluído com sucesso!'); window.location.href='list.php';</script>";
+if ($result->num_rows === 0) {
+    header("Location: list.php");
     exit();
 }
 
-// Se ainda não confirmou, mostra popup
-echo "<script>
-if (confirm('Deseja realmente excluir este veículo?')) {
-    window.location.href = 'delete.php?id={$id}&confirm=yes';
-} else {
-    window.location.href = 'list.php';
-}
-</script>";
+// Executa exclusão
+$stmt = $conn->prepare("DELETE FROM vehicles WHERE vehicle_id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+// Redireciona para a lista
+header("Location: list.php");
+exit();

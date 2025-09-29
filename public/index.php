@@ -1,27 +1,33 @@
 <?php
 require_once __DIR__ . "/../src/config.php";
 
-if (!isset($_SESSION["logado"])) {
+if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
     header("Location: login.php");
     exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Estacionamento</title>
+    <title>Dashboard - Sistema de Estacionamento</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h2>Bem-vindo ao Sistema</h2>
 
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header class="container">
+        <h2>Bem-vindo ao Sistema</h2>
         <nav>
-            <a href="vehicles/list.php">Gerenciar Veículos</a>
-            <a href="entries/list.php">Gerenciar Entradas</a>
-            <a href="logout.php">Sair</a>
+            <a href="vehicles/list.php"><i class="bi bi-car-front"></i> Veículos</a>
+            <a href="entries/list.php"><i class="bi bi-door-open"></i> Entradas</a>
+            <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
         </nav>
-    </div>
+    </header>
+
+    <?php include "footer.php"; ?>
 </body>
 </html>

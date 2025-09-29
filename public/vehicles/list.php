@@ -34,7 +34,7 @@ if ($search) {
 </head>
 
 <body>
-    <div class="container">
+    <main class="container">
         <h2>Lista de Veículos</h2>
 
         <nav>

@@ -5,8 +5,13 @@ require_once "../src/config.php";
 $usuario = "admin";
 $senha = "1234";
 
+$erro = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if ($_POST["usuario"] === $usuario && $_POST["senha"] === $senha) {
+    $usuarioPost = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
+    $senhaPost = $_POST['senha'];
+
+    if ($usuarioPost === $usuario && $senhaPost === $senha) {
         $_SESSION["logado"] = true;
         header("Location: index.php");
         exit();
@@ -15,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -22,15 +28,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body class="login-page">
-    <div class="container">
+    <header class="login-container">
         <h2>Login</h2>
 
-        <?php if(isset($erro)): ?>
-            <p style="color: red; font-weight: bold;"><?= $erro ?></p>
+        <?php if($erro): ?>
+            <p class="erro"><?= $erro ?></p>
         <?php endif; ?>
 
-        <form method="post">
+        <form method="post" autocomplete="off">
             <label for="usuario">Usuário</label>
             <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required>
 
@@ -39,6 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit">Entrar</button>
         </form>
-    </div>
+    </header>
 </body>
 </html>

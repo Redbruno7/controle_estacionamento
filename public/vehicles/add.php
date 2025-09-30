@@ -1,10 +1,13 @@
 <?php
 require_once __DIR__ . "/../../src/config.php";
+date_default_timezone_set('America/Sao_Paulo');
 
 if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
     header("Location: ../login.php");
     exit();
 }
+
+$alertMessage = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $owner = trim($_POST["owner"]);
@@ -12,12 +15,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $model = trim($_POST["model"]);
     $color = trim($_POST["color"]);
 
-    $stmt = $conn->prepare("INSERT INTO vehicles (owner_name, plate, model, color) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $owner, $plate, $model, $color);
-    $stmt->execute();
+    // Verifica se placa já existe
+    $check = $conn->prepare("SELECT 1 FROM vehicles WHERE plate = ?");
+    $check->bind_param("s", $plate);
+    $check->execute();
+    $check_result = $check->get_result();
 
-    header("Location: list.php");
-    exit();
+    if ($check_result->num_rows > 0) {
+        $alertMessage = "Placa já cadastrada!";
+    } else {
+        $stmt = $conn->prepare("INSERT INTO vehicles (owner_name, plate, model, color) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $owner, $plate, $model, $color);
+
+        if (!$stmt->execute()) {
+            $alertMessage = "Erro ao cadastrar veículo: " . $conn->error;
+        } else {
+            header("Location: list.php");
+            exit();
+        }
+    }
 }
 ?>
 
@@ -57,7 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Salvar Veículo</button>
         </form>
 
+        <?php if (!empty($alertMessage)) : ?>
+            <p class="alert"><?= $alertMessage ?></p>
+        <?php endif; ?>
+
         <?php include "../footer.php"; ?>
     </main>
+
+    <script src="../../assets/js/script.js"></script>
 </body>
 </html>

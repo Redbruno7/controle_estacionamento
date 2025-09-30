@@ -26,8 +26,8 @@ if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
             <a href="entries/list.php"><i class="bi bi-journal-check"></i> Entradas</a>
             <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Sair</a>
         </nav>
-    </header>
 
-    <?php include "footer.php"; ?>
+        <?php include "footer.php"; ?>
+    </header>
 </body>
 </html>

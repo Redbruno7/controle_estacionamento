@@ -31,8 +31,6 @@ if ($search) {
     <meta charset="UTF-8">
     <title>Veículos</title>
     <link rel="stylesheet" href="../../assets/css/style.css">
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 

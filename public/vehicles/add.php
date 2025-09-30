@@ -7,33 +7,63 @@ if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
     exit();
 }
 
-$alertMessage = null;
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $owner = trim($_POST['owner'] ?? '');
+    $plate  = strtoupper(trim($_POST['plate'] ?? ''));
+    $model  = trim($_POST['model'] ?? '');
+    $color  = trim($_POST['color'] ?? '');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $owner = trim($_POST["owner"]);
-    $plate = strtoupper(trim($_POST["plate"]));
-    $model = trim($_POST["model"]);
-    $color = trim($_POST["color"]);
-
-    // Verifica se placa já existe
-    $check = $conn->prepare("SELECT 1 FROM vehicles WHERE plate = ?");
-    $check->bind_param("s", $plate);
-    $check->execute();
-    $check_result = $check->get_result();
-
-    if ($check_result->num_rows > 0) {
-        $alertMessage = "Placa já cadastrada!";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO vehicles (owner_name, plate, model, color) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $owner, $plate, $model, $color);
-
-        if (!$stmt->execute()) {
-            $alertMessage = "Erro ao cadastrar veículo: " . $conn->error;
-        } else {
-            header("Location: list.php");
-            exit();
-        }
+    // Validar campos vazios
+    if ($owner === '' || $plate === '') {
+        header("Location: add.php?msg=campos_vazios");
+        exit();
     }
+
+    // Validar existência de placa
+    $check = $conn->prepare("SELECT 1 FROM vehicles WHERE plate = ?");
+    if (!$check) {
+        // Registrar erro no log do servidor
+        error_log("DB prepare failed (check): " . $conn->error);
+        header("Location: add.php?msg=db_error");
+        exit();
+    }
+
+    $check->bind_param("s", $plate);
+    if (!$check->execute()) {
+        error_log("DB execute failed (check): " . $check->error);
+        $check->close();
+        header("Location: add.php?msg=db_error");
+        exit();
+    }
+
+    // Verificar número de linhas
+    $check->store_result();
+    if ($check->num_rows > 0) {
+        $check->close();
+        header("Location: add.php?msg=placa");
+        exit();
+    }
+    $check->close();
+
+    // Preparar insert
+    $stmt = $conn->prepare("INSERT INTO vehicles (owner_name, plate, model, color) VALUES (?, ?, ?, ?)");
+    if (!$stmt) {
+        error_log("DB prepare failed (insert): " . $conn->error);
+        header("Location: add.php?msg=db_error");
+        exit();
+    }
+
+    $stmt->bind_param("ssss", $owner, $plate, $model, $color);
+    if (!$stmt->execute()) {
+        error_log("DB execute failed (insert): " . $stmt->error);
+        $stmt->close();
+        header("Location: add.php?msg=erro_insert");
+        exit();
+    }
+
+    $stmt->close();
+    header("Location: list.php?msg=sucesso");
+    exit();
 }
 ?>
 

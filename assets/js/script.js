@@ -10,10 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Mensagens de erro
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("msg")) {
-        const msg = params.get("msg");
+    // Função para exibir alert baseado em msg
+    function showAlert(msg) {
         switch (msg) {
             case "placa":
                 alert("Já existe um veículo cadastrado com esta placa!");
@@ -27,13 +25,30 @@ document.addEventListener("DOMContentLoaded", function() {
             case "erro_insert":
                 alert("Erro ao salvar veículo. Tente novamente.");
                 break;
+            case "erro_update":
+                alert("Erro ao atualizar veículo. Tente novamente.");
+                break;
             case "sucesso":
+                alert("Veículo cadastrado com sucesso!");
+                break;
+            case "sucesso_edit":
+                alert("Veículo atualizado com sucesso!");
+                break;
+            case "not_found":
+                alert("Veículo não encontrado.");
                 break;
             default:
+                // Nenhuma ação se não houver mensagem conhecida
                 break;
         }
+    }
 
-        // Não repetir mensagem ao recarregar a página
+    // Capturar mensagem da URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("msg")) {
+        showAlert(params.get("msg"));
+
+        // Limpar msg da URL para não repetir alerta ao recarregar
         if (history.replaceState) {
             const url = new URL(window.location);
             url.searchParams.delete('msg');

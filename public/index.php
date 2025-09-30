@@ -13,8 +13,6 @@ if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
     <meta charset="UTF-8">
     <title>Dashboard - Sistema de Estacionamento</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 

@@ -1,24 +1,20 @@
 <?php
-require_once "../../src/config.php";
+require_once __DIR__ . "/../../src/config.php";
 date_default_timezone_set('America/Sao_Paulo');
 
-$selected_vehicle_id = isset($_GET["vehicle_id"]) ? (int)$_GET["vehicle_id"] : null;
-
-// Verifica login
-if (!isset($_SESSION["logado"])) {
+if (empty($_SESSION["logado"]) || $_SESSION["logado"] !== true) {
     header("Location: ../login.php");
     exit();
 }
 
-// Definir total de vagas
+$selected_vehicle_id = isset($_GET["vehicle_id"]) ? (int)$_GET["vehicle_id"] : null;
 $total_vagas = 30;
 
-// Contar entradas sem saída (ocupadas)
+// Contar vagas ocupadas
 $stmt = $conn->query("SELECT COUNT(*) AS ocupadas FROM parking_entries WHERE exit_time IS NULL");
 $ocupadas = $stmt->fetch_assoc()['ocupadas'];
 $livres = $total_vagas - $ocupadas;
 
-// Processar envio do formulário
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($livres <= 0) {
         echo "<script>alert('Estacionamento lotado!'); window.history.back();</script>";

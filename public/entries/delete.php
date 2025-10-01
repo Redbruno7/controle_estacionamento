@@ -19,7 +19,7 @@ if (isset($_GET["confirm"]) && $_GET["confirm"] === "yes") {
     $stmt->bind_param("i", $id);
     $stmt->execute();
 
-    echo "<script>alert('Entrada excluída com sucesso!'); window.location.href='list.php';</script>";
+    echo "<script>window.location.href='list.php';</script>";
     exit();
 }
 

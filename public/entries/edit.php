@@ -46,7 +46,7 @@ if (isset($_GET["confirm"]) && $_GET["confirm"] === "yes") {
     $stmt->bind_param("sdi", $exit_time_db, $price, $id);
     $stmt->execute();
 
-    echo "<script>alert('Saída registrada com sucesso!'); window.location.href='list.php';</script>";
+    echo "<script>window.location.href='list.php';</script>";
     exit();
 }
 

@@ -29,10 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Erro ao atualizar veículo. Tente novamente.");
                 break;
             case "sucesso":
-                alert("Veículo cadastrado com sucesso!");
                 break;
             case "sucesso_edit":
-                alert("Veículo atualizado com sucesso!");
                 break;
             case "not_found":
                 alert("Veículo não encontrado.");
